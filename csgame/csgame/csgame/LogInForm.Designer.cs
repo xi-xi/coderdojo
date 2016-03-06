@@ -28,13 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.mainLayout = new System.Windows.Forms.TableLayoutPanel();
             this.loginButton = new System.Windows.Forms.Button();
             this.usernameLabel = new System.Windows.Forms.Label();
             this.passwordLabel = new System.Windows.Forms.Label();
             this.usernameTextbox = new System.Windows.Forms.TextBox();
             this.passwordTextbox = new System.Windows.Forms.TextBox();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.mainLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // mainLayout
@@ -107,6 +110,10 @@
             this.passwordTextbox.TabIndex = 4;
             this.passwordTextbox.UseSystemPasswordChar = true;
             // 
+            // errorProvider
+            // 
+            this.errorProvider.ContainerControl = this;
+            // 
             // LogInForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
@@ -117,6 +124,7 @@
             this.Text = "LogInForm";
             this.mainLayout.ResumeLayout(false);
             this.mainLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -129,5 +137,6 @@
         private System.Windows.Forms.Label passwordLabel;
         private System.Windows.Forms.TextBox passwordTextbox;
         private System.Windows.Forms.TextBox usernameTextbox;
+        private System.Windows.Forms.ErrorProvider errorProvider;
     }
 }

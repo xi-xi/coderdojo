@@ -41,7 +41,19 @@ namespace csgame
 
         public void OnLoggingIn()
         {
-            LogIn(usernameTextbox.Text, passwordTextbox.Text);
+            var username = usernameTextbox.Text;
+            var password = passwordTextbox.Text;
+            if(!CheckUser(username, password))
+            {
+                errorProvider.SetError(passwordLabel, "User Name or Password is invalid");
+                return;
+            }
+            LogIn(username, password);
+        }
+
+        private bool CheckUser(string name, string pass)
+        {
+            return false;
         }
 
         public void LogIn(string username, string password)
