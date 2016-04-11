@@ -53,13 +53,20 @@ namespace csgame
 
         private bool CheckUser(string name, string pass)
         {
-            return false;
+            return true;
         }
 
         public void LogIn(string username, string password)
         {
             var f = new MainForm();
             f.Show();
+            this.Hide();
+            f.FormClosed += MainFormClosed;
+        }
+
+        private void MainFormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
