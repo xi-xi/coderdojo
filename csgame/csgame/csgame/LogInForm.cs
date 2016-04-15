@@ -22,7 +22,11 @@ namespace csgame
 
         private void OnTextBoxKeyDown(object sender, EventArgs e)
         {
-            OnLoggingIn();
+            var eve = e as KeyEventArgs;
+            if(eve.KeyCode == Keys.Enter)
+            {
+                OnLoggingIn();
+            }
         }
 
         private void OnLoginButtonClicked(object sender, EventArgs e)
@@ -48,7 +52,7 @@ namespace csgame
                 errorProvider.SetError(passwordLabel, "User Name or Password is invalid");
                 return;
             }
-            LogIn(username, password);
+            LogIn(new UserAccount() { Name = username, PassWord = password });
         }
 
         private bool CheckUser(string name, string pass)
@@ -56,7 +60,7 @@ namespace csgame
             return true;
         }
 
-        public void LogIn(string username, string password)
+        void LogIn(UserAccount acc)
         {
             var f = new MainForm();
             f.Show();
