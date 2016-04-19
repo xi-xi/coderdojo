@@ -62,7 +62,6 @@ namespace csgame
 
         void LogIn(UserAccount acc)
         {
-            this.Hide();
         }
 
         private void MainFormClosed(object sender, FormClosedEventArgs e)
