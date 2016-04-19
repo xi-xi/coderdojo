@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Shooter;
 
 namespace GameService
 {
@@ -11,6 +12,10 @@ namespace GameService
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Player player;
+        KeyboardState currentKeyboardState;
+        KeyboardState previousKeyboardState;
+        float playerMoveSpeed;
 
         public MainGame()
         {
@@ -27,7 +32,8 @@ namespace GameService
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            player = new Player();
+            playerMoveSpeed = 8.0f;
             base.Initialize();
         }
 
@@ -41,6 +47,14 @@ namespace GameService
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            Vector2 playerposition = new Vector2(
+                GraphicsDevice.Viewport.TitleSafeArea.X,
+                GraphicsDevice.Viewport.TitleSafeArea.Y + GraphicsDevice.Viewport.TitleSafeArea.Height / 2
+            );
+            player.Initialize(
+                Content.Load<Texture2D>("Graphics\\player"),
+                playerposition
+            );
         }
 
         /// <summary>
@@ -63,8 +77,40 @@ namespace GameService
                 Exit();
 
             // TODO: Add your update logic here
-
+            this.previousKeyboardState = currentKeyboardState;
+            this.currentKeyboardState = Keyboard.GetState();
+            this.UpdatePlayer(gameTime);
             base.Update(gameTime);
+        }
+
+        private void UpdatePlayer(GameTime gametime)
+        {
+            if (currentKeyboardState.IsKeyDown(Keys.Left))
+            {
+                player.Position.X -= playerMoveSpeed;
+            }
+            if (currentKeyboardState.IsKeyDown(Keys.Right))
+            {
+                player.Position.X += playerMoveSpeed;
+            }
+            if (currentKeyboardState.IsKeyDown(Keys.Up))
+            {
+                player.Position.Y -= playerMoveSpeed;
+            }
+            if (currentKeyboardState.IsKeyDown(Keys.Down))
+            {
+                player.Position.Y += playerMoveSpeed;
+            }
+            player.Position.X = MathHelper.Clamp(
+                player.Position.X,
+                0,
+                GraphicsDevice.Viewport.Width - player.Width
+            );
+            player.Position.Y = MathHelper.Clamp(
+                player.Position.Y,
+                0,
+                GraphicsDevice.Viewport.Height - player.Height
+            );
         }
 
         /// <summary>
@@ -76,7 +122,9 @@ namespace GameService
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            player.Draw(spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
