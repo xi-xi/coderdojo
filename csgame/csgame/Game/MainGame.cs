@@ -33,14 +33,15 @@ namespace GameService
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
-            var player = new Player(this)
-            {
-                Position = new Vector2(
-                    GraphicsDevice.Viewport.TitleSafeArea.X,
-                    GraphicsDevice.Viewport.TitleSafeArea.Y + GraphicsDevice.Viewport.TitleSafeArea.Height / 2
-                )
-            };
-            this.Components.Add(player);
+            this.Components.Add(
+                new Player(this)
+                {
+                    Position = new Vector2(
+                        GraphicsDevice.Viewport.TitleSafeArea.X,
+                        GraphicsDevice.Viewport.TitleSafeArea.Y + GraphicsDevice.Viewport.TitleSafeArea.Height / 2
+                    )
+                }
+            );
             base.Initialize();
         }
 
