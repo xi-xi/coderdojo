@@ -14,7 +14,6 @@ namespace GameService
         KeyboardState previousKeyboardState;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Player player;
 
         public MainGame()
         {
@@ -34,7 +33,7 @@ namespace GameService
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
-            player = new Player(this);
+            var player = new Player(this);
             player.Position = new Vector2(
                 GraphicsDevice.Viewport.TitleSafeArea.X,
                 GraphicsDevice.Viewport.TitleSafeArea.Y + GraphicsDevice.Viewport.TitleSafeArea.Height / 2
