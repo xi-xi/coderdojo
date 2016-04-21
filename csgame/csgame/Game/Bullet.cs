@@ -36,6 +36,7 @@ namespace FieldObject
             if (this.isOutRange())
             {
                 this.Game.Components.Remove(this);
+                this.Enabled = false;
                 this.Dispose();
             }
             base.Update(gameTime);

@@ -10,7 +10,7 @@ using FieldObject;
 
 namespace Shooter
 {
-    class Player : DrawableGameComponent
+    class Player : DrawableGameComponent, IShooter
     {
         private SpriteBatch spriteBatch;
         private Texture2D texture;
@@ -19,6 +19,8 @@ namespace Shooter
         const float PLAYER_MOVE_SPEED = 8f;
         public Vector2 Position;
         public int Health;
+        private List<Bullet> bullets;
+        public List<Bullet> Bullets { get { return this.bullets; } }
         public int Width
         {
             get { return this.texture.Width; }
@@ -37,6 +39,7 @@ namespace Shooter
         {
             this.spriteBatch = new SpriteBatch(this.Game.GraphicsDevice);
             this.Health = 100;
+            this.bullets = new List<Bullet>();
             base.Initialize();
         }
 
@@ -85,14 +88,22 @@ namespace Shooter
 
         private void ShootBullet()
         {
-            this.Game.Components.Add(
-                new Bullet(this.Game as GameService.MainGame)
-                {
-                    Position = new Vector2(
+            var bullet = new Bullet(this.Game as GameService.MainGame)
+            {
+                Position = new Vector2(
                         this.Position.X + this.Width,
                         this.Position.Y + this.Height / 2
                     ),
-                    Speed = this.bulletSpeed
+                Speed = this.bulletSpeed
+            };
+            this.Game.Components.Add(bullet);
+            this.bullets.Add(bullet);
+            bullet.EnabledChanged += new EventHandler<EventArgs>(
+                (object sender, EventArgs e) => {
+                    if(!(sender as Bullet).Enabled)
+                    {
+                        bullets.Remove(sender as Bullet);
+                    }
                 }
             );
         }
