@@ -32,7 +32,18 @@ namespace FieldObject
         {
             this.Speed += this.Acceleration;
             this.Position += this.Speed;
+            if (this.isOutRange())
+            {
+                this.Game.Components.Remove(this);
+                this.Dispose();
+            }
             base.Update(gameTime);
+        }
+
+        private bool isOutRange()
+        {
+            return this.Position.X > GraphicsDevice.Viewport.Width + GraphicsDevice.Viewport.X ||
+                this.Position.Y > GraphicsDevice.Viewport.Height + GraphicsDevice.Viewport.Y;
         }
 
         public override void Draw(GameTime gameTime)

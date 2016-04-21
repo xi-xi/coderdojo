@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using FieldObject;
 
 namespace Shooter
 {
@@ -14,6 +15,7 @@ namespace Shooter
         private SpriteBatch spriteBatch;
         private Texture2D texture;
         private KeyboardState currentKeyboardState;
+        private Vector2 bulletSpeed = new Vector2(50.0f, 0.0f);
         const float PLAYER_MOVE_SPEED = 8f;
         public Vector2 Position;
         public int Health;
@@ -74,7 +76,25 @@ namespace Shooter
                 0,
                 GraphicsDevice.Viewport.Height - this.Height
             );
+            if (currentKeyboardState.IsKeyDown(Keys.Z))
+            {
+                this.ShootBullet();
+            }
             base.Update(gameTime);
+        }
+
+        private void ShootBullet()
+        {
+            this.Game.Components.Add(
+                new Bullet(this.Game as GameService.MainGame)
+                {
+                    Position = new Vector2(
+                        this.Position.X + this.Width,
+                        this.Position.Y + this.Height / 2
+                    ),
+                    Speed = this.bulletSpeed
+                }
+            );
         }
 
         public override void Draw(GameTime gameTime)
