@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FieldObject
@@ -43,7 +44,9 @@ namespace FieldObject
         private bool isOutRange()
         {
             return this.Position.X > GraphicsDevice.Viewport.Width + GraphicsDevice.Viewport.X ||
-                this.Position.Y > GraphicsDevice.Viewport.Height + GraphicsDevice.Viewport.Y;
+                this.Position.Y > GraphicsDevice.Viewport.Height + GraphicsDevice.Viewport.Y ||
+                this.Position.X < GraphicsDevice.Viewport.X ||
+                this.Position.Y < GraphicsDevice.Viewport.Y;
         }
 
         public override void Draw(GameTime gameTime)
@@ -54,14 +57,19 @@ namespace FieldObject
                 this.Position,
                 null,
                 Color.White,
-                0f,
-                Vector2.Zero,
+                this.getDirectionRotate(),
+                new Vector2(this.texture.Width / 2.0f, this.texture.Height / 2.0f),
                 1f,
                 SpriteEffects.None,
                 0f
              );
             base.Draw(gameTime);
             this.spriteBatch.End();
+        }
+
+        private float getDirectionRotate()
+        {
+            return (float)Math.Atan2(this.Speed.Y, this.Speed.X);
         }
     }
 }
