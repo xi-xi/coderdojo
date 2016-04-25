@@ -14,6 +14,8 @@ namespace GameService
         KeyboardState previousKeyboardState;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Player player;
+        Enemy enemy;
 
         public MainGame()
         {
@@ -33,15 +35,23 @@ namespace GameService
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
-            this.Components.Add(
-                new Player(this)
-                {
-                    Position = new Vector2(
+            player = new Player(this)
+            {
+                Position = new Vector2(
                         GraphicsDevice.Viewport.TitleSafeArea.X,
                         GraphicsDevice.Viewport.TitleSafeArea.Y + GraphicsDevice.Viewport.TitleSafeArea.Height / 2
                     )
-                }
-            );
+            };
+            enemy = new Enemy(this)
+            {
+                Position = new Vector2(
+                    GraphicsDevice.Viewport.TitleSafeArea.X + GraphicsDevice.Viewport.TitleSafeArea.Width * 0.8f,
+                    GraphicsDevice.Viewport.TitleSafeArea.Y + GraphicsDevice.Viewport.TitleSafeArea.Height / 2
+                ),
+                Player = player
+            };
+            this.Components.Add(player);
+            this.Components.Add(enemy);
             base.Initialize();
         }
 

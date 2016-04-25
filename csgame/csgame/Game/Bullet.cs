@@ -6,11 +6,13 @@ namespace FieldObject
 {
     class Bullet :DrawableGameComponent
     {
-        private Texture2D texture;
+        public Texture2D Texture { get; set; }
         public Vector2 Position = Vector2.Zero;
         public Vector2 Speed = Vector2.Zero;
         public Vector2 Acceleration = Vector2.Zero;
         private SpriteBatch spriteBatch;
+        public int Width { get { return this.Texture.Width; } }
+        public int Height { get { return this.Texture.Height; } }
         public Bullet(GameService.MainGame game)
             : base(game)
         {
@@ -25,7 +27,6 @@ namespace FieldObject
 
         protected override void LoadContent()
         {
-            this.texture = this.Game.Content.Load<Texture2D>("Graphics\\bullet");
             base.LoadContent();
         }
 
@@ -53,17 +54,20 @@ namespace FieldObject
         public override void Draw(GameTime gameTime)
         {
             this.spriteBatch.Begin();
-            spriteBatch.Draw(
-                this.texture,
-                this.Position,
-                null,
-                Color.White,
-                this.getDirectionRotate(),
-                new Vector2(this.texture.Width / 2.0f, this.texture.Height / 2.0f),
-                1f,
-                SpriteEffects.None,
-                0f
-             );
+            if (this.Texture != null)
+            {
+                spriteBatch.Draw(
+                    this.Texture,
+                    this.Position,
+                    null,
+                    Color.White,
+                    this.getDirectionRotate(),
+                    new Vector2(this.Texture.Width / 2.0f, this.Texture.Height / 2.0f),
+                    1f,
+                    SpriteEffects.None,
+                    0f
+                 );
+            }
             base.Draw(gameTime);
             this.spriteBatch.End();
         }

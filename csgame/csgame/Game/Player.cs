@@ -14,6 +14,7 @@ namespace Shooter
     {
         private SpriteBatch spriteBatch;
         private Texture2D texture;
+        private Texture2D bulletTexture;
         private KeyboardState currentKeyboardState;
         private Vector2 bulletSpeed = new Vector2(50.0f, 0.0f);
         const float PLAYER_MOVE_SPEED = 8f;
@@ -46,6 +47,7 @@ namespace Shooter
         protected override void LoadContent()
         {
             this.texture = this.Game.Content.Load<Texture2D>("Graphics\\player");
+            this.bulletTexture = this.Game.Content.Load<Texture2D>("Graphics\\bullet.png");
             base.LoadContent();
         }
 
@@ -90,6 +92,7 @@ namespace Shooter
         {
             var bullet = new Bullet(this.Game as GameService.MainGame)
             {
+                Texture = this.bulletTexture,
                 Position = new Vector2(
                         this.Position.X + this.Width,
                         this.Position.Y + this.Height / 2
@@ -103,6 +106,7 @@ namespace Shooter
                     if(!(sender as Bullet).Enabled)
                     {
                         bullets.Remove(sender as Bullet);
+                        this.Game.Components.Remove(sender as Bullet);
                     }
                 }
             );
