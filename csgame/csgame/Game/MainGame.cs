@@ -50,6 +50,7 @@ namespace GameService
                 ),
                 Player = player
             };
+            player.Enemy = enemy;
             this.Components.Add(player);
             this.Components.Add(enemy);
             base.Initialize();
