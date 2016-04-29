@@ -35,6 +35,7 @@ namespace GameService
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
+            this.Components.Add(new BackGround(this));
             player = new Player(this)
             {
                 Position = new Vector2(
