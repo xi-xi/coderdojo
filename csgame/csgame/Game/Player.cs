@@ -182,7 +182,6 @@ namespace Shooter
             {
                 alpha = ((gt.TotalGameTime - this.crashedTime).Milliseconds % freq) / freq;
             }
-            Game.Window.Title = alpha.ToString();
             return new Color(
                 1.0f,
                 this.Health,
