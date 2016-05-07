@@ -52,7 +52,7 @@ namespace Shooter
 
         protected override void LoadContent()
         {
-            this.texture = this.Game.Content.Load<Texture2D>("Graphics\\player");
+            this.texture = this.Game.Content.Load<Texture2D>("Graphics\\player.png");
             this.bulletTexture = this.Game.Content.Load<Texture2D>("Graphics\\bullet.png");
             base.LoadContent();
         }
