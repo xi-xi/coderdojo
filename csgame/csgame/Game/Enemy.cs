@@ -127,7 +127,7 @@ namespace Shooter
                 this.lastShootTime = gt.TotalGameTime;
                 return;
             }
-            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 500)
+            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 250)
             {
                 var playerDirection = this.Player.Position - this.Position;
                 playerDirection.Normalize();
@@ -146,12 +146,22 @@ namespace Shooter
                 this.lastShootTime = gt.TotalGameTime;
                 return;
             }
-            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 250)
+            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 200)
             {
                 var playerDirection = this.Player.Position - this.Position;
                 playerDirection.Normalize();
                 this.ShootBullet(
-                    playerDirection * 10f,
+                    playerDirection * 5f,
+                    null
+                );
+                var d30 = Vector2.Transform(playerDirection, Matrix.CreateRotationZ((float)Math.PI / 3.0f));
+                this.ShootBullet(
+                    d30 * 5f,
+                    null
+                );
+                var d30_ = Vector2.Transform(playerDirection, Matrix.CreateRotationZ(-(float)Math.PI / 3.0f));
+                this.ShootBullet(
+                    d30_ * 5f,
                     null
                 );
                 this.lastShootTime = gt.TotalGameTime;
@@ -165,14 +175,18 @@ namespace Shooter
                 this.lastShootTime = gt.TotalGameTime;
                 return;
             }
-            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 150)
+            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 200)
             {
                 var playerDirection = this.Player.Position - this.Position;
                 playerDirection.Normalize();
-                this.ShootBullet(
-                    playerDirection * 10f,
-                    null
-                );
+                for (float r = -2.0f; r <= 2.0f; r += 1.0f)
+                {
+                    var d = Vector2.Transform(
+                        playerDirection,
+                        Matrix.CreateRotationZ((float)Math.PI / 6.0f * r)
+                    );
+                    this.ShootBullet(d * 2.5f, null);
+                }
                 this.lastShootTime = gt.TotalGameTime;
             }
         }
@@ -184,14 +198,25 @@ namespace Shooter
                 this.lastShootTime = gt.TotalGameTime;
                 return;
             }
-            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 100)
+            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 200)
             {
                 var playerDirection = this.Player.Position - this.Position;
                 playerDirection.Normalize();
-                this.ShootBullet(
-                    playerDirection * 10f,
-                    null
-                );
+                for(float r = -4.0f; r <= 4.0f; r += 1.0f)
+                {
+                    var d = Vector2.Transform(
+                        playerDirection,
+                        Matrix.CreateRotationZ((float)Math.PI / 6.0f * r)
+                    );
+                    for(float a = -0.01f; a <= 0.01f; a += 0.01f)
+                    {
+                        var acc = Vector2.Transform(
+                            d,
+                            Matrix.CreateRotationZ((float)Math.PI / 2.0f)
+                        ) * a;
+                        this.ShootBullet(d * 2.0f, acc);
+                    }
+                }
                 this.lastShootTime = gt.TotalGameTime;
             }
         }
@@ -203,14 +228,22 @@ namespace Shooter
                 this.lastShootTime = gt.TotalGameTime;
                 return;
             }
-            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 50)
+            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 200)
             {
                 var playerDirection = this.Player.Position - this.Position;
                 playerDirection.Normalize();
-                this.ShootBullet(
-                    playerDirection * 10f,
-                    null
-                );
+                for (float r = -6.0f; r <= 6.0f; r += 0.5f)
+                {
+                    var d = Vector2.Transform(
+                        playerDirection,
+                        Matrix.CreateRotationZ((float)Math.PI / 6.0f * r)
+                    );
+                    var acc = Vector2.Transform(
+                        d,
+                        Matrix.CreateRotationZ((float)Math.PI / 2.0f)
+                    ) * ((float)this.random.NextDouble() - 0.5f) * 0.005f;
+                    this.ShootBullet(d * 2.0f, acc);
+                }
                 this.lastShootTime = gt.TotalGameTime;
             }
         }
@@ -222,6 +255,7 @@ namespace Shooter
                 : this.Health > MAX_HEALTH * 0.4 ? State.Normal
                 : this.Health > MAX_HEALTH * 0.2 ? State.Hard
                 : State.Lunatic;
+            this.Game.Window.Title = this.state.ToString();
         }
 
         private void ShootBullet(Vector2 speed, Vector2? acc)
@@ -260,7 +294,7 @@ namespace Shooter
                 if (this_rect.Intersects(bullet_rect))
                 {
                     hitbullets.Add(bullet);
-                    this.Health -= 0.001f;
+                    this.Health -= 0.01f;
                 }
             });
             hitbullets.ForEach((bullet) => { bullet.Enabled = false; });

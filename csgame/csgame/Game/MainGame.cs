@@ -80,6 +80,10 @@ namespace GameService
 
         private void ShowResult(string str)
         {
+            if (this.Components.Contains(result))
+            {
+                return;
+            }
             this.Components.Add(this.result);
             this.result.ResultString = str;
         }
