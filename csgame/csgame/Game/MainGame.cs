@@ -16,6 +16,7 @@ namespace GameService
         SpriteBatch spriteBatch;
         Player player;
         Enemy enemy;
+        Menu menu;
 
         public MainGame()
         {
@@ -35,7 +36,6 @@ namespace GameService
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
-            this.Components.Add(new BackGround(this));
             player = new Player(this)
             {
                 Position = new Vector2(
@@ -52,9 +52,31 @@ namespace GameService
                 Player = player
             };
             player.Enemy = enemy;
+            menu = new Menu(this);
+            menu.OnItemSelected += OnMenuItemSelected;
+            this.Components.Add(menu);
+            base.Initialize();
+        }
+
+        private void OnMenuItemSelected(Menu.MenuItemType item)
+        {
+            if(item == Menu.MenuItemType.Start)
+            {
+                this.StartGame();
+            }
+            else if (item == Menu.MenuItemType.Exit)
+            {
+                this.Exit();
+            }
+        }
+
+        private void StartGame()
+        {
+            this.menu.Enabled = false;
+            this.menu.Visible = false;
+            this.Components.Add(new BackGround(this));
             this.Components.Add(player);
             this.Components.Add(enemy);
-            base.Initialize();
         }
 
         /// <summary>
