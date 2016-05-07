@@ -16,12 +16,17 @@ namespace GameService
             Start = 0,
             Exit
         }
+        const string MANUAL = "MANUAL\n" + 
+            "    Z : Shot, OK\n" +
+            "    Arrow Key : Move\n" +
+            "    ESC : Exit";
         public delegate void MenuEventHandler(MenuItemType item);
         public event MenuEventHandler OnItemSelected;
         KeyboardState previousKeyState;
         KeyboardState currentKeyState;
         int currentIndex;
         MenuItemType[] items;
+        Vector2[] itemPositions;
         SpriteBatch spriteBatch;
         SpriteFont font;
 
@@ -35,6 +40,7 @@ namespace GameService
         {
             this.currentIndex = 0;
             this.items = Enum.GetValues(typeof(MenuItemType)) as MenuItemType[];
+            this.itemPositions = new Vector2[this.items.Count()];
             base.Initialize();
         }
 
@@ -42,6 +48,13 @@ namespace GameService
         {
             this.spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             this.font = Game.Content.Load<SpriteFont>("Fonts\\SampleFont");
+            var center = new Vector2(Game.GraphicsDevice.Viewport.Width / 2, Game.GraphicsDevice.Viewport.Height / 2);
+            for (int i = 0; i < this.items.Count(); ++i)
+            {
+                this.itemPositions[i] = center -
+                    0.5f * font.MeasureString(items[i].ToString()) +
+                    new Vector2(0, (i - items.Count() * 0.5f) * 100 + 200);
+            }
             base.LoadContent();
         }
 
@@ -90,14 +103,28 @@ namespace GameService
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(
-                this.font,
-                this.items[this.currentIndex].ToString(),
-                new Vector2(100, 100),
-                Color.White
-            );
+            for(int i = 0; i < items.Count(); ++i)
+            {
+                spriteBatch.DrawString(
+                    this.font,
+                    this.items[i].ToString(),
+                    this.itemPositions[i],
+                    i == this.currentIndex ? Color.OrangeRed : Color.White
+                );
+            }
+            this.DrawManual();
             spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        private void DrawManual()
+        {
+            spriteBatch.DrawString(
+                this.font,
+                Menu.MANUAL,
+                new Vector2(50, 50),
+                Color.Gray
+            );
         }
     }
 }
