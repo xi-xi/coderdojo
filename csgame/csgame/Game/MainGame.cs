@@ -17,6 +17,7 @@ namespace GameService
         Player player;
         Enemy enemy;
         Menu menu;
+        ResultScene result;
 
         public MainGame()
         {
@@ -43,6 +44,7 @@ namespace GameService
                         GraphicsDevice.Viewport.TitleSafeArea.Y + GraphicsDevice.Viewport.TitleSafeArea.Height / 2
                     )
             };
+            player.EnabledChanged += PlayerEnableChanged;
             enemy = new Enemy(this)
             {
                 Position = new Vector2(
@@ -51,11 +53,35 @@ namespace GameService
                 ),
                 Player = player
             };
+            enemy.EnabledChanged += EnemyEnabledChanged;
             player.Enemy = enemy;
+            this.result = new ResultScene(this);
             menu = new Menu(this);
             menu.OnItemSelected += OnMenuItemSelected;
             this.Components.Add(menu);
             base.Initialize();
+        }
+
+        private void EnemyEnabledChanged(object sender, System.EventArgs e)
+        {
+            if (!enemy.Enabled)
+            {
+                this.ShowResult("CLEAR");
+            }
+        }
+
+        private void PlayerEnableChanged(object sender, System.EventArgs e)
+        {
+            if (!player.Enabled)
+            {
+                this.ShowResult("FAILED");
+            }
+        }
+
+        private void ShowResult(string str)
+        {
+            this.Components.Add(this.result);
+            this.result.ResultString = str;
         }
 
         private void OnMenuItemSelected(Menu.MenuItemType item)

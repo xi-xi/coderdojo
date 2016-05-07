@@ -94,8 +94,8 @@ namespace Shooter
             this.CheckHit();
             if(this.Health <= 0)
             {
-                this.Game.Components.Remove(this);
-                this.Dispose();
+                this.Enabled = false;
+                this.Visible = false;
             }
             base.Update(gameTime);
         }

@@ -91,6 +91,11 @@ namespace Shooter
             {
                 this.ShootBullet();
             }
+            if(this.Health <= 0)
+            {
+                this.Enabled = false;
+                this.Visible = false;
+            }
             this.UpdateCrash(gameTime);
             this.CheckHitBullet(gameTime);
             base.Update(gameTime);
