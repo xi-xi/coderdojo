@@ -57,7 +57,7 @@ namespace GameService
                 this.currentIndex = MathHelper.Clamp(
                     this.currentIndex - 1,
                     0,
-                    this.items.Count()
+                    this.items.Count() - 1
                 );
             }
             if (this.IsPressedJustNow(Keys.Down))
@@ -65,7 +65,7 @@ namespace GameService
                 this.currentIndex = MathHelper.Clamp(
                     this.currentIndex + 1,
                     0,
-                    this.items.Count()
+                    this.items.Count() - 1
                 );
             }
             if (this.IsPressedJustNow(Keys.Z))
