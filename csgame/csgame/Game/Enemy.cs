@@ -11,7 +11,16 @@ namespace Shooter
 {
     class Enemy : DrawableGameComponent, IShooter
     {
+        enum State
+        {
+            Beginner,
+            Easy,
+            Normal,
+            Hard,
+            Lunatic
+        }
         private const float MAX_HEALTH = 1.0f;
+        private State state;
         private SpriteBatch spritebatch;
         private Texture2D texture;
         private List<Bullet> bullets;
@@ -52,7 +61,7 @@ namespace Shooter
 
         public Vector2 Position;
         private Random random = new Random();
-        private GameTime lastShootTime;
+        private TimeSpan lastShootTime;
 
         public Enemy(Game game)
             : base(game)
@@ -64,6 +73,7 @@ namespace Shooter
         {
             this.bullets = new List<Bullet>();
             this.Health = MAX_HEALTH;
+            this.state = State.Beginner;
             base.Initialize();
         }
 
@@ -77,27 +87,141 @@ namespace Shooter
 
         public override void Update(GameTime gameTime)
         {
-            if (this.lastShootTime == null)
-            {
-                this.lastShootTime = gameTime;
-            }
-            var elapsed = gameTime.TotalGameTime - this.lastShootTime.TotalGameTime;
-            var playerDirection = this.Player.Position - this.Position;
-            playerDirection.Normalize();
-            if(this.random.Next(0, 6) == 0)
-            {
-                this.ShootBullet(
-                    playerDirection * 10f,
-                    null
-                );
-            }
+            this.DoAction(gameTime);
             this.CheckHit();
+            this.UpdateState();
             if(this.Health <= 0)
             {
                 this.Enabled = false;
                 this.Visible = false;
             }
             base.Update(gameTime);
+        }
+
+        private void DoAction(GameTime gametime)
+        {
+            switch (this.state)
+            {
+                case State.Beginner:
+                    this.BeginnerAction(gametime);
+                    break;
+                case State.Easy:
+                    this.EasyAction(gametime);
+                    break;
+                case State.Normal:
+                    this.NormalAction(gametime);
+                    break;
+                case State.Hard:
+                    this.HardAction(gametime);
+                    break;
+                case State.Lunatic:
+                    this.LunaticAction(gametime);
+                    break;
+            }
+        }
+
+        private void BeginnerAction(GameTime gt)
+        {
+            if(this.lastShootTime == null)
+            {
+                this.lastShootTime = gt.TotalGameTime;
+                return;
+            }
+            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 500)
+            {
+                var playerDirection = this.Player.Position - this.Position;
+                playerDirection.Normalize();
+                this.ShootBullet(
+                    playerDirection * 10f,
+                    null
+                );
+                this.lastShootTime = gt.TotalGameTime;
+            }
+        }
+
+        private void EasyAction(GameTime gt)
+        {
+            if (this.lastShootTime == null)
+            {
+                this.lastShootTime = gt.TotalGameTime;
+                return;
+            }
+            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 250)
+            {
+                var playerDirection = this.Player.Position - this.Position;
+                playerDirection.Normalize();
+                this.ShootBullet(
+                    playerDirection * 10f,
+                    null
+                );
+                this.lastShootTime = gt.TotalGameTime;
+            }
+        }
+
+        private void NormalAction(GameTime gt)
+        {
+            if (this.lastShootTime == null)
+            {
+                this.lastShootTime = gt.TotalGameTime;
+                return;
+            }
+            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 150)
+            {
+                var playerDirection = this.Player.Position - this.Position;
+                playerDirection.Normalize();
+                this.ShootBullet(
+                    playerDirection * 10f,
+                    null
+                );
+                this.lastShootTime = gt.TotalGameTime;
+            }
+        }
+
+        private void HardAction(GameTime gt)
+        {
+            if (this.lastShootTime == null)
+            {
+                this.lastShootTime = gt.TotalGameTime;
+                return;
+            }
+            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 100)
+            {
+                var playerDirection = this.Player.Position - this.Position;
+                playerDirection.Normalize();
+                this.ShootBullet(
+                    playerDirection * 10f,
+                    null
+                );
+                this.lastShootTime = gt.TotalGameTime;
+            }
+        }
+
+        private void LunaticAction(GameTime gt)
+        {
+            if (this.lastShootTime == null)
+            {
+                this.lastShootTime = gt.TotalGameTime;
+                return;
+            }
+            if ((gt.TotalGameTime - this.lastShootTime).TotalMilliseconds >= 50)
+            {
+                var playerDirection = this.Player.Position - this.Position;
+                playerDirection.Normalize();
+                this.ShootBullet(
+                    playerDirection * 10f,
+                    null
+                );
+                this.lastShootTime = gt.TotalGameTime;
+            }
+        }
+
+        private void UpdateState()
+        {
+            this.state = this.Health > MAX_HEALTH * 0.8 ? State.Beginner
+                : this.Health > MAX_HEALTH * 0.6 ? State.Easy
+                : this.Health > MAX_HEALTH * 0.4 ? State.Normal
+                : this.Health > MAX_HEALTH * 0.2 ? State.Hard
+                : State.Lunatic;
         }
 
         private void ShootBullet(Vector2 speed, Vector2? acc)
