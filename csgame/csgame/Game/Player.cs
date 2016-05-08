@@ -13,6 +13,7 @@ namespace Shooter
     class Player : DrawableGameComponent, IShooter
     {
         private const int CRASHED_TIME = 1000;
+        private bool isSlowMode;
         private SpriteBatch spriteBatch;
         private Texture2D texture;
         private Texture2D bulletTexture;
@@ -47,6 +48,7 @@ namespace Shooter
             this.Health = 1.0f;
             this.bullets = new List<Bullet>();
             this.IsCrashed = false;
+            this.isSlowMode = false;
             base.Initialize();
         }
 
@@ -60,7 +62,9 @@ namespace Shooter
         public override void Update(GameTime gameTime)
         {
             this.currentKeyboardState = Keyboard.GetState();
-            float playerMoveSpeed = Player.PLAYER_MOVE_SPEED;
+            this.isSlowMode = currentKeyboardState.IsKeyDown(Keys.LeftShift)
+                || currentKeyboardState.IsKeyDown(Keys.RightShift);
+            float playerMoveSpeed = Player.PLAYER_MOVE_SPEED * (this.isSlowMode ? 0.1f : 1.0f);
             if (currentKeyboardState.IsKeyDown(Keys.Left))
             {
                 this.Position.X -= playerMoveSpeed;
