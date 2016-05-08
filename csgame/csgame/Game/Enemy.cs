@@ -294,7 +294,7 @@ namespace Shooter
                 if (this_rect.Intersects(bullet_rect))
                 {
                     hitbullets.Add(bullet);
-                    this.Health -= 0.001f;
+                    this.Health -= 0.0005f;
                 }
             });
             hitbullets.ForEach((bullet) => { bullet.Enabled = false; });
